@@ -67,7 +67,7 @@ class QRViewModel @Inject constructor(
                         asisTO.offlinex = "NO"
                         asisTO.entsal = "E"
 
-                        if (dato.length == 8 || dato.length == 9) {
+                        try {
                             val success = asisRepo.insertarAsistenciax(asisTO)
                             if (success) {
                                 _asistenciasRegistradas.postValue(_asistenciasRegistradas.value?.plus(asisTO))
@@ -77,7 +77,8 @@ class QRViewModel @Inject constructor(
                             } else {
                                 _insertStatus.postValue(false)
                             }
-                        } else {
+                        } catch (e: Exception) {
+                            Log.e("Error", "Error al registrar la asistencia: ${e.message}")
                             _insertStatus.postValue(false)
                         }
                         isProcessing = false
