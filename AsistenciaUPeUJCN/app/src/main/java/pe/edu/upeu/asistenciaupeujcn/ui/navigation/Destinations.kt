@@ -13,36 +13,30 @@ import androidx.compose.ui.graphics.vector.ImageVector
 sealed class Destinations(
     val route: String,
     val title: String,
-    val icon: ImageVector) {
-    object Login:Destinations("login", "Login",
-        Icons.Filled.Settings)
-    object Pantalla1 : Destinations( "pantalla1", "Pantalla 1", Icons.Filled.Home )
-    object Pantalla2 :
-            Destinations("pantalla2/?newText={newText}", "Pantalla 2",
-                Icons.Filled.Settings) {
-            fun createRoute(newText: String) = "pantalla2/?newText=$newText"
-        }
+    val icon: ImageVector
+) {
+    object Login : Destinations("login", "Login", Icons.Filled.Settings)
+    object Pantalla1 : Destinations("pantalla1", "Pantalla 1", Icons.Filled.Home)
+    object Pantalla2 : Destinations("pantalla2/?newText={newText}", "Pantalla 2", Icons.Filled.Settings) {
+        fun createRoute(newText: String) = "pantalla2/?newText=$newText"
+    }
     object Pantalla3 : Destinations("pantalla3", "Pantalla 3", Icons.Filled.Favorite)
-    object Pantalla4 : Destinations("pantalla4", "Pantalla 4x", Icons.Filled.Face )
-    object Pantalla5 : Destinations("pantalla5", "Pantalla 5x", Icons.Filled.AccountCircle )
+    object Pantalla4 : Destinations("pantalla4", "Pantalla 4x", Icons.Filled.Face)
+    object Pantalla5 : Destinations("pantalla5", "Pantalla 5x", Icons.Filled.AccountCircle)
 
-    object ActividadUI: Destinations("actividadUI","Adm. Actividades", Icons.Filled.DateRange)
-        object ActividadForm:
-            Destinations("actividadForm?actId={actId}", "Form Actividad",
-                Icons.Filled.Add){
-            fun passId(actId:String?):String{
-                return "actividadForm?actId=$actId"
-            }
+    object ActividadUI : Destinations("actividadUI", "Adm. Actividades", Icons.Filled.DateRange)
+    object ActividadForm : Destinations("actividadForm?actId={actId}", "Form Actividad", Icons.Filled.Add) {
+        fun passId(actId: String?): String {
+            return "actividadForm?actId=$actId"
         }
-
-
-    object PantallaQRHome : Destinations("ListaActividadQR",
-        "Reg. Asis. QR", Icons.Filled.AccountCircle )
-    object RegAsisQRForm:
-        Destinations("RegAsisQRForm?actId={actId}", "Form Reg QR.",
-            Icons.Filled.Add){
-        fun passId(actId:String?):String{
+    }
+    object PantallaQRHome : Destinations("ListaActividadQR", "Reg. Asis. QR", Icons.Filled.AccountCircle)
+    object RegAsisQRForm : Destinations("RegAsisQRForm?actId={actId}", "Form Reg QR.", Icons.Filled.Add) {
+        fun passId(actId: String?): String {
             return "regAsisQRForm?actId=$actId"
         }
     }
+
+    // Nueva ruta para Lista de Asistencias
+    object ListaAsistencias : Destinations("listaAsistencias", "Lista de Asistencias", Icons.Filled.AccountCircle)
 }

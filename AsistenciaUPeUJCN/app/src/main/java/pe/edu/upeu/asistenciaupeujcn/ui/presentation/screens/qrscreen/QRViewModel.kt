@@ -54,8 +54,11 @@ class QRViewModel @Inject constructor(
             try {
                 if (barcodes.size == 1) {
                     val dato = barcodes[0].displayValue
+                    Log.d("QRViewModel", "Código QR detectado: $dato") // Log del código QR detectado
                     if (dato != null && dato != lastProcessedBarcode) {
                         isProcessing = true
+                        Log.d("QRViewModel", "Iniciando registro de asistencia") // Log cuando se inicia el registro
+
                         asisTO.fecha = "2024-09-14"
                         asisTO.horaReg = "14:30"
                         asisTO.tipo = "inspección"
@@ -67,18 +70,22 @@ class QRViewModel @Inject constructor(
                         asisTO.offlinex = "NO"
                         asisTO.entsal = "E"
 
+                        Log.d("QRViewModel", "CUI: ${asisTO.cui}, Fecha: ${asisTO.fecha}") // Log de los datos de la asistencia
+
                         try {
                             val success = asisRepo.insertarAsistenciax(asisTO)
                             if (success) {
+                                Log.d("QRViewModel", "Asistencia registrada correctamente en la base de datos") // Log si la inserción es exitosa
                                 _asistenciasRegistradas.postValue(_asistenciasRegistradas.value?.plus(asisTO))
                                 lastProcessedBarcode = dato
                                 _insertStatus.postValue(true)
                                 resetLastProcessedBarcode()
                             } else {
+                                Log.e("QRViewModel", "Error al registrar la asistencia en la base de datos") // Log si la inserción falla
                                 _insertStatus.postValue(false)
                             }
                         } catch (e: Exception) {
-                            Log.e("Error", "Error al registrar la asistencia: ${e.message}")
+                            Log.e("Error", "Error al registrar la asistencia: ${e.message}") // Log si hay una excepción
                             _insertStatus.postValue(false)
                         }
                         isProcessing = false

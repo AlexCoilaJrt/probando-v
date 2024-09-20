@@ -3,6 +3,7 @@ package pe.edu.upeu.asistenciaupeujcn.ui.navigation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -14,6 +15,7 @@ import pe.edu.upeu.asistenciaupeujcn.ui.presentation.screens.Pantalla4
 import pe.edu.upeu.asistenciaupeujcn.ui.presentation.screens.Pantalla5
 import pe.edu.upeu.asistenciaupeujcn.ui.presentation.screens.actividad.ActividadForm
 import pe.edu.upeu.asistenciaupeujcn.ui.presentation.screens.actividad.ActividadUI
+import pe.edu.upeu.asistenciaupeujcn.ui.presentation.screens.asistencia.ListaAsistencias
 import pe.edu.upeu.asistenciaupeujcn.ui.presentation.screens.login.LoginScreen
 import pe.edu.upeu.asistenciaupeujcn.ui.presentation.screens.qrscreen.ActividadListUI
 import pe.edu.upeu.asistenciaupeujcn.ui.presentation.screens.qrscreen.BarcodeScanningScreen
@@ -22,62 +24,46 @@ import pe.edu.upeu.asistenciaupeujcn.ui.presentation.screens.qrscreen.BarcodeSca
 fun NavigationHost(
     navController: NavHostController,
     darkMode: MutableState<Boolean>,
-    modif:PaddingValues
+    modif: PaddingValues
 ) {
     NavHost(
-        navController = navController, startDestination =
-        Destinations.Login.route
+        navController = navController,
+        startDestination = Destinations.Login.route
     ) {
-        composable(Destinations.Login.route){
-            LoginScreen(navigateToHome = { navController.navigate(Destinations.Pantalla1.route)})
+        composable(Destinations.Login.route) {
+            LoginScreen(navigateToHome = { navController.navigate(Destinations.Pantalla1.route) })
         }
         composable(Destinations.Pantalla1.route) {
-            Pantalla1(navegarPantalla2 = { newText ->navController.navigate(Destinations.Pantalla2.createRoute(newText)) }
-            )
+            Pantalla1(navegarPantalla2 = { newText -> navController.navigate(Destinations.Pantalla2.createRoute(newText)) })
         }
-
-        composable( Destinations.Pantalla2.route, arguments = listOf(navArgument("newText") { defaultValue = "Pantalla 2"
-        })
-        ) { navBackStackEntry ->
-            var newText =navBackStackEntry.arguments?.getString("newText")
+        composable(Destinations.Pantalla2.route, arguments = listOf(navArgument("newText") { defaultValue = "Pantalla 2" })) { navBackStackEntry ->
+            val newText = navBackStackEntry.arguments?.getString("newText")
             requireNotNull(newText)
-        Pantalla2(newText, darkMode)
+            Pantalla2(newText, darkMode)
         }
+        composable(Destinations.Pantalla3.route) { Pantalla3() }
+        composable(Destinations.Pantalla4.route) { Pantalla4() }
+        composable(Destinations.Pantalla5.route) { Pantalla5() }
 
-        composable(Destinations.Pantalla3.route) {
-            Pantalla3() }
-        composable(Destinations.Pantalla4.route) {
-            Pantalla4() }
-        composable(Destinations.Pantalla5.route) {
-            Pantalla5() }
-
-
-        composable(Destinations.ActividadUI.route){
-            ActividadUI(navegarEditarAct =
-            {newText->navController.navigate(Destinations.ActividadForm.passId(newText))},
-                navController =navController )
+        composable(Destinations.ActividadUI.route) {
+            ActividadUI(navegarEditarAct = { newText -> navController.navigate(Destinations.ActividadForm.passId(newText)) }, navController = navController)
         }
-        composable(Destinations.ActividadForm.route, arguments =
-        listOf(navArgument("actId"){
-            defaultValue="actId"
-        })){
-            navBackStackEntry -> var actId=navBackStackEntry.arguments?.getString("actId")
+        composable(Destinations.ActividadForm.route, arguments = listOf(navArgument("actId") { defaultValue = "actId" })) { navBackStackEntry ->
+            val actId = navBackStackEntry.arguments?.getString("actId")
             requireNotNull(actId)
-            ActividadForm(text = actId, darkMode = darkMode, navController=navController )
+            ActividadForm(text = actId, darkMode = darkMode, navController = navController)
         }
-
 
         composable(Destinations.PantallaQRHome.route) {
-            ActividadListUI(navegarListaAct = {
-                navController.navigate(Destinations.RegAsisQRForm.route)
-            }, navController=navController)
+            ActividadListUI(navegarListaAct = { navController.navigate(Destinations.RegAsisQRForm.route) }, navController = navController)
         }
         composable(Destinations.RegAsisQRForm.route) {
-            BarcodeScanningScreen(
-                navController=navController
-            )
+            BarcodeScanningScreen(navController = navController)
         }
 
-
+        // Pantalla de lista de asistencias
+        composable(Destinations.ListaAsistencias.route) {
+            ListaAsistencias(viewModel = hiltViewModel())
+        }
     }
 }
